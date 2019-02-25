@@ -22,8 +22,9 @@
 }
 
 .App-header h1 {
-  margin-block-start: 0.5rem;
-  margin-block-end: 0.5rem;
+  margin-block-start: 0;
+  margin-block-end: 0.5vh;
+  font-size: 6.5vh;
 }
 
 @keyframes App-logo-spin {
@@ -39,19 +40,29 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   width: 99vw;
-  height: 90vh;
-  margin: 0 auto;
+  height: 88vh;
+  margin: 1vh auto;
 }
 
 .App .body div {
   margin: 5px;
   border-radius: 10px;
   background: #e2e4e9;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.App .body div>div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: flex-start;
 }
 
 .App .body button {
+  max-width: 200px;
   margin-block-start: 0.83em;
-  margin-block-end: 0.83em;
+  margin-block-end: 0;
   border: 1px dotted  #646e82;
   padding: 5px 10px;
   border-radius: 7px;
