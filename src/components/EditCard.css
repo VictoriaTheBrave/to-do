@@ -15,7 +15,7 @@
   text-align: left;
 }
 
-.edit-card input {
+.edit-card input, textarea {
   width: 98%;
   border-radius: 5px;
 }
