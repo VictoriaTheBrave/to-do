@@ -1,7 +1,8 @@
 .App .body div>div[id] {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  width: 100%;
+  min-height: 80%;
   align-content: flex-start;
 }
 
@@ -14,6 +15,18 @@
     rgba(0, 0, 0, 0.12) 0px 1px 3px 0px;
   text-align: left;
   background: white;
+}
+
+.App .body .todo {
+  background: #ffe6e6;
+}
+
+.App .body .inprogress {
+  background: #fff7e6;
+}
+
+.App .body .done {
+  background: #e6ffee;
 }
 
 .body .card h3 {

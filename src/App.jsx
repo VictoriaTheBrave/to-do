@@ -30,19 +30,23 @@ class App extends Component {
 
   onDragEnd(result) {
     const { source, destination, draggableId } = result;
-    if (!destination) {
-      return;
-    }
-
-    if (source.droppableId === destination.droppableId && destination.index === source.index) {
-      return;
-    } 
+    if (!destination) return;
+    if (source.droppableId === destination.droppableId && destination.index === source.index) return; 
     
-    const column = this.state[source.droppableId];
-    const draggableCard = column.splice(source.index, 1);
-    column.splice(destination.index, 0, draggableCard[0]);
-    column.forEach((obj, i) => obj.taskID = `${source.droppableId}-task-${i}`);
-    this.setState({ [source.droppableId]: column });
+    const start = this.state[source.droppableId];
+    const finish = this.state[destination.droppableId];
+    const draggableCard = start.splice(source.index, 1);
+
+    if (start === finish) {
+      start.splice(destination.index, 0, draggableCard[0]);
+      start.forEach((obj, i) => obj.taskID = `${source.droppableId}-task-${i}`);
+      this.setState({ [source.droppableId]: start });
+    } else {
+      finish.splice(destination.index, 0, draggableCard[0]);
+      start.forEach((obj, i) => obj.taskID = `${source.droppableId}-task-${i}`);
+      finish.forEach((obj, i) => obj.taskID = `${destination.droppableId}-task-${i}`);
+      this.setState({ [source.droppableId]: start, [destination.droppableId]: finish });
+    }
   }
 
   render() {
