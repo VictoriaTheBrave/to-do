@@ -44,19 +44,12 @@
   margin: 1vh auto;
 }
 
-.App .body div {
+.App .body>div {
   margin: 5px;
   border-radius: 10px;
   background: #e2e4e9;
   overflow-y: auto;
   overflow-x: hidden;
-}
-
-.App .body div>div {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: flex-start;
 }
 
 .App .body button {
