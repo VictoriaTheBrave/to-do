@@ -1,25 +1,43 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Droppable, Draggable } from 'react-beautiful-dnd';
 import './Column.css';
 
 export default function Column(props) {
   const { h2, componentClass, arr } = props;
-  const cardsList = arr.map((item, i) => {
+  const cardsList = arr.map((item, index) => {
     return (
-      <div key={i + item.title} className="card">
-        <h3>{item.title}</h3>
-        <p>{item.description}</p>
-        <img src={item.photo} alt={item.photo}/>
-      </div>
+      <Draggable
+        key={`${componentClass}-item-${index}`}
+        draggableId={`${componentClass}-item-${index}`}
+        index={index}>
+        {(provided) => (
+          <div
+            className="card"
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            ref={provided.innerRef}
+          >
+            <h3>{item.title}</h3>
+            <p>{item.description}</p>
+            <img src={item.photo} alt={item.photo}/>
+          </div>
+        )}
+      </Draggable>
     );
   });
 
   return (
     <div className={componentClass}>
-      <h2>{h2}</h2>
-      <div id={componentClass}>
-        {cardsList}
-      </div>
+    <h2>{h2}</h2>
+    <Droppable droppableId={componentClass}>
+      {(provided) => (
+        <div ref={provided.innerRef} {...provided.droppableProps} id={componentClass}>
+          {cardsList}
+          {provided.placeholder}
+        </div>
+      )}
+    </Droppable>
     </div>
   );
 }

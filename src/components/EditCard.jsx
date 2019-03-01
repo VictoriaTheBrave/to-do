@@ -22,7 +22,6 @@ export default class EditCard extends Component {
   }
 
   handleSubmit(event) {
-    console.log(this);
     event.preventDefault();
     this.props.addToDoCard('todo', this.state);
     this.props.closeCardEditing();
