@@ -4,7 +4,7 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 import './Column.css';
 
 export default function Column(props) {
-  const { h2, componentClass, arr } = props;
+  const { h2, componentClass, arr, editCard } = props;
   const cardsList = arr.map((item, index) => {
     return (
       <Draggable
@@ -20,6 +20,12 @@ export default function Column(props) {
           >
             <h3>{item.title}</h3>
             <p>{item.description}</p>
+            <i className="fas fa-edit" onClick={(e) => {
+              editCard(e);
+              // e.target.parentNode.remove();
+              // document.querySelector('.App .body button').click();
+              e.stopPropagation();
+            }}></i>
             <img src={item.photo} alt={item.photo}/>
           </div>
         )}
@@ -46,4 +52,5 @@ Column.propTypes = {
   h2: PropTypes.string.isRequired,
   componentClass: PropTypes.string.isRequired,
   arr: PropTypes.array.isRequired,
+  editCard: PropTypes.func.isRequired,
 };

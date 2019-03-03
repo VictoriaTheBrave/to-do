@@ -2,13 +2,14 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 80%;
+  min-height: 90%;
   align-content: flex-start;
 }
 
 .body .card {
   position: relative;
   width: 95%;
+  height: 100px;
   justify-self: center;
   margin: 5px auto;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px,
@@ -39,8 +40,16 @@
   margin-left: 5px;
 }
 
-.body .card img {
+.body .card i {
   position: absolute;
   top: 1%;
+  right: 1%;
+  font-size: 1.375rem;
+  color: #646e82;
+}
+
+.body .card img {
+  position: absolute;
+  bottom: 1%;
   right: 1%;
 }

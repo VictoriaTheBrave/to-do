@@ -13,23 +13,44 @@ class App extends Component {
       todo: [],
       inprogress: [],
       done: [],
+      editCurrent: '',
     };
     this.toggleEditing = this.toggleEditing.bind(this);
-    this.addToDoCard = this.addToDoCard.bind(this);
+    this.addCard = this.addCard.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
+    this.editCard = this.editCard.bind(this);
   }
 
   toggleEditing() {
     this.setState(prevState => ({ editing: !prevState.editing }));
   }
 
-  addToDoCard(key, obj) {
+  addCard(key, obj, edit = false) {
     obj.taskID = `${key}-task-${this.state[key].length}`;
-    this.setState(() => this.state[key].push(obj));
+    if (typeof edit === 'boolean') {
+      this.setState(() => this.state[key].push(obj));
+    } else {
+      this.setState((state) => state[key][edit] = obj);
+    }
+  }
+
+  editCard(e) {
+    const cardContent = e.target.parentNode.children;
+    const currentColumn = e.target.parentNode.parentNode;
+    this.setState({
+      editing: true,
+      editCurrent: {
+        title: cardContent[0].innerHTML,
+        description: cardContent[1].innerHTML,
+        photo: cardContent[3].innerHTML,
+        column: currentColumn.id,
+        index: Array.from(currentColumn.children).indexOf(e.target.parentNode),
+      }
+    });
   }
 
   onDragEnd(result) {
-    const { source, destination, draggableId } = result;
+    const { source, destination } = result;
     if (!destination) return;
     if (source.droppableId === destination.droppableId && destination.index === source.index) return; 
     
@@ -50,7 +71,7 @@ class App extends Component {
   }
 
   render() {
-    const { editing, todo, inprogress, done } = this.state;
+    const { editing, todo, inprogress, done, editCurrent } = this.state;
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <div className="App">
@@ -59,12 +80,14 @@ class App extends Component {
             <h1>ToDo Manager</h1>
           </header>
           <section className="body">
-            <Column h2="ToDo" componentClass="todo" arr={todo} />
-            <Column h2="In Progress" componentClass="inprogress" arr={inprogress} />
-            <Column h2="Done" componentClass="done" arr={done} />
+            <Column h2="ToDo" componentClass="todo" arr={todo} editCard={this.editCard} />
+            <Column h2="In Progress" componentClass="inprogress" arr={inprogress} editCard={this.editCard} />
+            <Column h2="Done" componentClass="done" arr={done} editCard={this.editCard} />
             <div className="edit-container">
-              <button type="button" onClick={this.toggleEditing.bind(this)}>Add new item</button>
-              {editing ? <EditCard closeCardEditing={this.toggleEditing} addToDoCard={this.addToDoCard} /> : null}
+              <button type="button" onClick={this.toggleEditing.bind(this)}>Add new card</button>
+              {editing ?
+                <EditCard closeCardEditing={this.toggleEditing} addCard={this.addCard} editMode={editCurrent} />
+                : null}
             </div>
           </section>
         </div>

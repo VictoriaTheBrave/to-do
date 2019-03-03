@@ -41,7 +41,7 @@
 .edit-card .submit {
   max-width: 150px;
   height: 50px;
-  margin: 10px auto;
+  margin: 30px auto 5px;
   border: 1px dotted  #646e82;
   padding: 5px 10px;
   border-radius: 7px;
