@@ -15,11 +15,12 @@ class App extends Component {
       done: [],
       editCurrent: '',
     };
+    this.saveColumnStateToLocalStorage = this.saveColumnStateToLocalStorage.bind(this);
     this.toggleEditing = this.toggleEditing.bind(this);
     this.addCard = this.addCard.bind(this);
-    this.onDragEnd = this.onDragEnd.bind(this);
     this.editCard = this.editCard.bind(this);
-    this.saveColumnStateToLocalStorage = this.saveColumnStateToLocalStorage.bind(this);
+    this.onDragStart = this.onDragStart.bind(this);
+    this.onDragEnd = this.onDragEnd.bind(this);
   }
 
   componentDidMount() {
@@ -36,7 +37,6 @@ class App extends Component {
 
   saveColumnStateToLocalStorage(column) {
     const json = JSON.stringify(this.state[column]);
-    debugger
     localStorage.setItem(column, json);
   }
 
@@ -68,6 +68,10 @@ class App extends Component {
     });
   }
 
+  onDragStart() {
+    this.setState({ editing: false, editCurrent: '' });
+  }
+
   onDragEnd(result) {
     const { source, destination } = result;
     if (!destination) return;
@@ -95,7 +99,7 @@ class App extends Component {
   render() {
     const { editing, todo, inprogress, done, editCurrent } = this.state;
     return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
+      <DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
         <div className="App">
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />

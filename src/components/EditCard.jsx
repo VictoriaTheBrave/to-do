@@ -33,6 +33,11 @@ export default class EditCard extends Component {
     if (!file) {
       return
     }
+
+    if (file.size > 307200) {
+      alert('File is too big! Try load a smaller file');
+    }
+
     generateImgUrl(file, imgUrl => {
       this.setState({ photo: imgUrl });
     })
@@ -54,7 +59,7 @@ export default class EditCard extends Component {
       <form onSubmit={this.handleSubmit} className="edit-card">
         <label htmlFor="title">
           <h3>Title</h3>
-          <input type="text" id="title" value={title} onChange={this.handleChange}  minlength={2} />
+          <input type="text" id="title" value={title} onChange={this.handleChange}  minLength={2} />
         </label>
         <label htmlFor="title">
           <h3>Description</h3>
