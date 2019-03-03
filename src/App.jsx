@@ -15,7 +15,6 @@ class App extends Component {
       done: [],
       editCurrent: '',
     };
-    this.saveColumnStateToLocalStorage = this.saveColumnStateToLocalStorage.bind(this);
     this.toggleEditing = this.toggleEditing.bind(this);
     this.addCard = this.addCard.bind(this);
     this.editCard = this.editCard.bind(this);
@@ -23,33 +22,38 @@ class App extends Component {
     this.onDragEnd = this.onDragEnd.bind(this);
   }
 
-  componentDidMount() {
-    if (localStorage.getItem('todo')) {
-      this.setState({ 'todo': JSON.parse(localStorage.getItem('todo'))});
-    }
-    if (localStorage.getItem('inprogress')) {
-      this.setState({ 'inprogress': JSON.parse(localStorage.getItem('inprogress'))});
-    }
-    if (localStorage.getItem('done')) {
-      this.setState({ 'done': JSON.parse(localStorage.getItem('done'))});
+  loadStateFromLocalStorage(columnName) {
+    if (localStorage.getItem(columnName)) {
+      this.setState({ [columnName]: JSON.parse(localStorage.getItem(columnName))});
     }
   }
 
+  componentDidMount() {
+    this.loadStateFromLocalStorage('todo');
+    this.loadStateFromLocalStorage('inprogress');
+    this.loadStateFromLocalStorage('done');
+  }
+
   saveColumnStateToLocalStorage(column) {
-    const json = JSON.stringify(this.state[column]);
-    localStorage.setItem(column, json);
+    localStorage.setItem(column, JSON.stringify(this.state[column]));
   }
 
   toggleEditing() {
     this.setState(prevState => ({ editing: !prevState.editing }));
   }
 
-  addCard(key, obj, edit = false) {
-    obj.taskID = `${key}-task-${this.state[key].length}`;
-    if (typeof edit === 'boolean') {
-      this.setState(() => { this.state[key].push(obj); this.saveColumnStateToLocalStorage(key); });
+  addCard(columnName, noteInfo, taskIndex) {
+    noteInfo.taskID = `${columnName}-task-${this.state[columnName].length}`;
+    if (typeof taskIndex === 'number') {
+      this.setState((state) => {
+        state[columnName][taskIndex] = noteInfo;
+        this.saveColumnStateToLocalStorage(columnName);
+      });
     } else {
-      this.setState((state) => { state[key][edit] = obj; this.saveColumnStateToLocalStorage(key); });
+      this.setState(() => {
+        this.state[columnName].push(noteInfo);
+        this.saveColumnStateToLocalStorage(columnName);
+      });
     }
   }
 
@@ -74,8 +78,7 @@ class App extends Component {
 
   onDragEnd(result) {
     const { source, destination } = result;
-    if (!destination) return;
-    if (source.droppableId === destination.droppableId && destination.index === source.index) return; 
+    if (!destination || (source.droppableId === destination.droppableId && destination.index === source.index)) return;
     
     const startColumn = this.state[source.droppableId];
     const finishColumn = this.state[destination.droppableId];

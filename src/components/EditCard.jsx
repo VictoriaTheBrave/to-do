@@ -23,19 +23,21 @@ export default class EditCard extends Component {
   }
 
   handlePhotoChange(event) {
+    const MAX_SIZE = 307200;
     function generateImgUrl(file, callback) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = e => callback(reader.result);
     }
     const file = event.target.files[0]
-
+    
     if (!file) {
       return
     }
-
-    if (file.size > 307200) {
+    
+    if (file.size > MAX_SIZE) {
       alert('File is too big! Try load a smaller file');
+      return;
     }
 
     generateImgUrl(file, imgUrl => {
@@ -59,7 +61,7 @@ export default class EditCard extends Component {
       <form onSubmit={this.handleSubmit} className="edit-card">
         <label htmlFor="title">
           <h3>Title</h3>
-          <input type="text" id="title" value={title} onChange={this.handleChange}  minLength={2} />
+          <input type="text" id="title" value={title} onChange={this.handleChange} required />
         </label>
         <label htmlFor="title">
           <h3>Description</h3>
