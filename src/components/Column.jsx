@@ -22,8 +22,6 @@ export default function Column(props) {
             <p>{item.description}</p>
             <i className="fas fa-edit" onClick={(e) => {
               editCard(e);
-              // e.target.parentNode.remove();
-              // document.querySelector('.App .body button').click();
               e.stopPropagation();
             }}></i>
             <img src={item.photo} alt={item.photo}/>

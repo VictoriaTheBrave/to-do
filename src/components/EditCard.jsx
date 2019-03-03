@@ -23,9 +23,19 @@ export default class EditCard extends Component {
   }
 
   handlePhotoChange(event) {
-    console.log(event.target.files[0].name);
-    // event.target.value = event.target.files[0].name;
-    this.setState({ photo: event.target.files[0].name });
+    function generateImgUrl(file, callback) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = e => callback(reader.result);
+    }
+    const file = event.target.files[0]
+
+    if (!file) {
+      return
+    }
+    generateImgUrl(file, imgUrl => {
+      this.setState({ photo: imgUrl });
+    })
   }
 
   handleSubmit(event) {
@@ -40,7 +50,6 @@ export default class EditCard extends Component {
 
   render() {
     const { title, description } = this.state;
-    // const photoValue = (typeof this.props.editMode === 'object') ? this.props.editMode.photo : '';
     return (
       <form onSubmit={this.handleSubmit} className="edit-card">
         <label htmlFor="title">
@@ -56,7 +65,7 @@ export default class EditCard extends Component {
           <input type="file"
             ref={this.fileInput}
             onChange={this.handlePhotoChange}
-            // value={photoValue}
+            accept=".png,.jpg,.jpeg,.svg"
           />
         </label>
         <input type="submit" value="Save" className="submit" />

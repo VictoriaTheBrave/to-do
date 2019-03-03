@@ -42,7 +42,7 @@ class App extends Component {
       editCurrent: {
         title: cardContent[0].innerHTML,
         description: cardContent[1].innerHTML,
-        photo: cardContent[3].innerHTML,
+        photo: cardContent[3].src,
         column: currentColumn.id,
         index: Array.from(currentColumn.children).indexOf(e.target.parentNode),
       }
