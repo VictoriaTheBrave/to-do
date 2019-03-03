@@ -19,6 +19,25 @@ class App extends Component {
     this.addCard = this.addCard.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.editCard = this.editCard.bind(this);
+    this.saveColumnStateToLocalStorage = this.saveColumnStateToLocalStorage.bind(this);
+  }
+
+  componentDidMount() {
+    if (localStorage.getItem('todo')) {
+      this.setState({ 'todo': JSON.parse(localStorage.getItem('todo'))});
+    }
+    if (localStorage.getItem('inprogress')) {
+      this.setState({ 'inprogress': JSON.parse(localStorage.getItem('inprogress'))});
+    }
+    if (localStorage.getItem('done')) {
+      this.setState({ 'done': JSON.parse(localStorage.getItem('done'))});
+    }
+  }
+
+  saveColumnStateToLocalStorage(column) {
+    const json = JSON.stringify(this.state[column]);
+    debugger
+    localStorage.setItem(column, json);
   }
 
   toggleEditing() {
@@ -28,9 +47,9 @@ class App extends Component {
   addCard(key, obj, edit = false) {
     obj.taskID = `${key}-task-${this.state[key].length}`;
     if (typeof edit === 'boolean') {
-      this.setState(() => this.state[key].push(obj));
+      this.setState(() => { this.state[key].push(obj); this.saveColumnStateToLocalStorage(key); });
     } else {
-      this.setState((state) => state[key][edit] = obj);
+      this.setState((state) => { state[key][edit] = obj; this.saveColumnStateToLocalStorage(key); });
     }
   }
 
@@ -54,19 +73,22 @@ class App extends Component {
     if (!destination) return;
     if (source.droppableId === destination.droppableId && destination.index === source.index) return; 
     
-    const start = this.state[source.droppableId];
-    const finish = this.state[destination.droppableId];
-    const draggableCard = start.splice(source.index, 1);
+    const startColumn = this.state[source.droppableId];
+    const finishColumn = this.state[destination.droppableId];
+    const draggableCard = startColumn.splice(source.index, 1);
 
-    if (start === finish) {
-      start.splice(destination.index, 0, draggableCard[0]);
-      start.forEach((obj, i) => obj.taskID = `${source.droppableId}-task-${i}`);
-      this.setState({ [source.droppableId]: start });
+    if (startColumn === finishColumn) {
+      startColumn.splice(destination.index, 0, draggableCard[0]);
+      startColumn.forEach((obj, i) => obj.taskID = `${source.droppableId}-task-${i}`);
+      this.setState({ [source.droppableId]: startColumn }, () => this.saveColumnStateToLocalStorage(startColumn));
     } else {
-      finish.splice(destination.index, 0, draggableCard[0]);
-      start.forEach((obj, i) => obj.taskID = `${source.droppableId}-task-${i}`);
-      finish.forEach((obj, i) => obj.taskID = `${destination.droppableId}-task-${i}`);
-      this.setState({ [source.droppableId]: start, [destination.droppableId]: finish });
+      finishColumn.splice(destination.index, 0, draggableCard[0]);
+      startColumn.forEach((obj, i) => obj.taskID = `${source.droppableId}-task-${i}`);
+      finishColumn.forEach((obj, i) => obj.taskID = `${destination.droppableId}-task-${i}`);
+      this.setState({ [source.droppableId]: startColumn, [destination.droppableId]: finishColumn }, () => {
+        this.saveColumnStateToLocalStorage(source.droppableId);
+        this.saveColumnStateToLocalStorage(destination.droppableId);
+      });
     }
   }
 

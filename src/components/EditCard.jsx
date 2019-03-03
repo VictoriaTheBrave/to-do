@@ -54,7 +54,7 @@ export default class EditCard extends Component {
       <form onSubmit={this.handleSubmit} className="edit-card">
         <label htmlFor="title">
           <h3>Title</h3>
-          <input type="text" id="title" value={title} onChange={this.handleChange} />
+          <input type="text" id="title" value={title} onChange={this.handleChange}  minlength={2} />
         </label>
         <label htmlFor="title">
           <h3>Description</h3>
